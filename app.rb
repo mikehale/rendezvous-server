@@ -9,7 +9,8 @@ helpers do
 end
 
 get '/' do
-  socket = request.env["puma.socket"]
-  puts peer_pair(socket)
-  peer_pair(socket)
+  # socket = request.env["puma.socket"]
+  # puts peer_pair(socket)
+  # peer_pair(socket)
+  headers.inspect
 end
