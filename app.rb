@@ -12,5 +12,5 @@ get '/' do
   # socket = request.env["puma.socket"]
   # puts peer_pair(socket)
   # peer_pair(socket)
-  headers.inspect
+  headers["X-Forwarded-Proto"]
 end
