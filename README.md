@@ -1,7 +1,7 @@
 rendezvous-server
 =================
 
-Server for rendezvous-socket
+Server for [rendezvous-socket](https://github.com/mikehale/rendezvous-socket)
 
 ## TODO
 
