@@ -7,3 +7,4 @@ Server for rendezvous-socket
 
 * force ssl
 * sessions
+* run as heroku app
