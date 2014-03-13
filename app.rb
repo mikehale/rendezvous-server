@@ -6,8 +6,12 @@ class RendezvousServer < Sinatra::Base
   @@redis = nil
 
   helpers do
-    def peer_pair(socket, forwarded_for)
-      [forwarded_for || socket.peeraddr[3], socket.peeraddr[1]].join(":")
+    def peer_pair(env)
+      forwarded_for = env["HTTP_X_FORWARDED_FOR"]
+      forwarded_port = env["HTTP_X_FORWARDED_PORT"]
+      socket = env["puma.socket"]
+
+      [forwarded_for || socket.peeraddr[3], forwarded_port || socket.peeraddr[1]].join(":")
     end
 
     def redis
@@ -21,7 +25,7 @@ class RendezvousServer < Sinatra::Base
   end
 
   get '/' do
-    addr = peer_pair(request.env["puma.socket"], request.env["HTTP_X_FORWARDED_FOR"])
+    addr = peer_pair(request.env)
 
     if (peers = redis.smembers("peers")).size > 0
       redis.srem("peers", peers)
