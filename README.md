@@ -7,4 +7,4 @@ Server for [rendezvous-socket](https://github.com/mikehale/rendezvous-socket)
 
 * force ssl
 * sessions
-* run as heroku app
+* run as heroku app (requires https://github.com/heroku/mochiweb/pull/6/files)
