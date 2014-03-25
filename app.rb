@@ -2,6 +2,8 @@ require 'sinatra/base'
 require 'pg'
 require 'uri'
 
+STDOUT.sync = true
+
 class RendezvousServer < Sinatra::Base
   @@pg = nil
 
