@@ -17,7 +17,12 @@ class RendezvousServer < Sinatra::Base
     end
 
     def pg
-      @@pg ||= PG.connect(ENV['DATABASE_URL'] || "postgres://localhost/rendezvous-server")
+      @@pg ||= begin
+                 uri = URI.parse(ENV['DATABASE_URL'] || "postgres://localhost/rendezvous-server")
+                 user = uri.user || ENV["USER"]
+                 dbname = uri.path.scan(/\/([^\/]+)/)[0][0]
+                 PG.connect(host: uri.host, port: uri.port, dbname: dbname, user: user, password: uri.password, sslmode: 'prefer')
+               end
     end
   end
 
