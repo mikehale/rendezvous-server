@@ -8,7 +8,7 @@ class RendezvousServer < Sinatra::Base
   helpers do
     def peer_pair(env)
       forwarded_for = env["HTTP_X_FORWARDED_FOR"]
-      forwarded_port = env["HTTP_X_FORWARDED_PORT"]
+      forwarded_port = env["HTTP_X_FORWARDED_PEER_PORT"]
       socket = env["puma.socket"]
 
       [forwarded_for || socket.peeraddr[3], forwarded_port || socket.peeraddr[1]].join(":")
