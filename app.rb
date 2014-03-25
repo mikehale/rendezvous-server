@@ -24,6 +24,7 @@ class RendezvousServer < Sinatra::Base
   get '/' do
     addr = peer_pair(request.env)
     puts addr.inspect
+    puts pg.inspect
 
     # if (peers = redis.smembers("peers")).size > 0
     #   redis.srem("peers", peers)
