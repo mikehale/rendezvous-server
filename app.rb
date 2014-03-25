@@ -17,7 +17,7 @@ class RendezvousServer < Sinatra::Base
     end
 
     def pg
-      @@pg ||= PG.connect(ENV['DATABASE_URL'] | "postgres://localhost/rendezvous-server")
+      @@pg ||= PG.connect(ENV['DATABASE_URL'] || "postgres://localhost/rendezvous-server")
     end
   end
 
