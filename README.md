@@ -29,4 +29,3 @@ curl 'https://rendezvous-server.herokuapp.com?rendezvous-id=$id'
 
 * force ssl
 * sessions
-* run as heroku app (requires https://github.com/heroku/mochiweb/pull/6/files)
