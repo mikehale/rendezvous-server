@@ -1,10 +1,15 @@
 require 'sinatra/base'
-require 'pg'
+require 'sinatra/reloader'
+require 'sequel'
 require 'uri'
 
 STDOUT.sync = true
 
 class RendezvousServer < Sinatra::Base
+  configure :development do
+    register Sinatra::Reloader
+  end
+
   @@pg = nil
 
   helpers do
@@ -16,36 +21,39 @@ class RendezvousServer < Sinatra::Base
       [forwarded_for || socket.peeraddr[3], forwarded_port || socket.peeraddr[1]].join(":")
     end
 
+    def database_url
+      ENV["DATABASE_URL"] || "postgres://localhost/rendezvous-server"
+    end
+
     def pg
-      @@pg ||= begin
-                 uri = URI.parse(ENV['DATABASE_URL'] || "postgres://localhost/rendezvous-server")
-                 user = uri.user || ENV["USER"]
-                 dbname = uri.path.scan(/\/([^\/]+)/)[0][0]
-                 PG.connect(host: uri.host, port: uri.port, dbname: dbname, user: user, password: uri.password, sslmode: 'prefer')
-               end
+      @@pg ||= Sequel.connect(database_url)
     end
   end
 
   get '/' do
     addr = peer_pair(request.env)
-    puts addr.inspect
-    puts pg.inspect
+    client_id = [addr, params['client']].join('_')
+    channel = params['rendezvous-id'] || "post office"
+    peer = nil
 
-    # if (peers = redis.smembers("peers")).size > 0
-    #   redis.srem("peers", peers)
-    #   redis.sadd("peers", addr)
-    #   puts "peer1: #{peers.first}"
-    #   peers.first
-    # else
-    #   redis.sadd("peers", addr)
-    #   while (peers = redis.smembers("peers").reject{|e| e == addr }).empty?
-    #     sleep 0.1
-    #   end
-    #   redis.srem("peers", peers)
-    #   puts "peer2: #{peers.first}"
-    #   peers.first
-    # end
+    notify_handler = proc {|conn|
+      puts "#{client_id} notifying #{channel}"
+      pg.notify channel, payload: client_id
+    }
 
-    ''
+    pg.listen(channel, after_listen: notify_handler, loop: true) do |channel, pid, payload|
+      puts "#{client_id} received #{payload} via #{channel}"
+
+      if payload != client_id
+        puts "#{client_id} saw peer #{payload}, so stopping listen loop"
+        peer = payload
+        break
+      end
+    end
+
+    # TODO: how can we detect and not send the final extra notify from the second client?
+    notify_handler.call(nil)
+
+    peer.split('_')[0]
   end
 end
