@@ -7,11 +7,9 @@ Server for [rendezvous-socket](https://github.com/mikehale/rendezvous-socket)
 
 ```term
 h create rendezvous-server
-h labs:enable keepalive
-h labs:enable http-proxy-peer-port
-h addons:add heroku-postgresql:crane
+h sudo labs:enable keepalive
+h sudo labs:enable http-proxy-peer-port
 git push heroku master
-h run bin/migrate
 ```
 
 ## TODO
