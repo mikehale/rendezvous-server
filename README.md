@@ -12,6 +12,19 @@ h sudo labs:enable http-proxy-peer-port
 git push heroku master
 ```
 
+## Usage
+
+Terminal 1:
+```term
+id=$(uuidgen)
+curl 'https://rendezvous-server.herokuapp.com?rendezvous-id=$id'
+```
+
+Terminal 2 (using the same id):
+```term
+curl 'https://rendezvous-server.herokuapp.com?rendezvous-id=$id'
+```
+
 ## TODO
 
 * force ssl
