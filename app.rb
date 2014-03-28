@@ -32,7 +32,7 @@ class RendezvousServer < Sinatra::Base
 
   get '/' do
     addr = peer_pair(request.env)
-    client_id = [addr, params['client']].join('_')
+    client_id = [addr, params['client']].compact.join('_')
     channel = params['rendezvous-id'] || "post office"
     peer = nil
 
