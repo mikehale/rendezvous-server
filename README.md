@@ -17,12 +17,12 @@ git push heroku master
 Terminal 1:
 ```term
 id=$(uuidgen)
-curl 'https://rendezvous-server.herokuapp.com?rendezvous-id=$id'
+curl "https://rendezvous-server.herokuapp.com?rendezvous-id=$id"
 ```
 
 Terminal 2 (using the same id):
 ```term
-curl 'https://rendezvous-server.herokuapp.com?rendezvous-id=$id'
+curl "https://rendezvous-server.herokuapp.com?rendezvous-id=$id"
 ```
 
 ## TODO
