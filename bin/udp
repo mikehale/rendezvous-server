@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+
+require 'socket'
+require 'sequel'
+
+Thread.abort_on_exception = true
+
+SERVER_PORT = 5000
+
+class MessageHandler
+  attr_reader :msg, :msg_src
+
+  def initialize(msg, msg_src)
+    @msg = msg
+    @msg_src = msg_src
+  end
+
+  def remote_peer
+    [
+      msg_src.remote_address.ip_address,
+      msg_src.remote_address.ip_port
+    ].join(":")
+  end
+
+  def call
+    client_id = remote_peer
+    channel = "post office"
+    peer = nil
+
+    notify_handler = proc {|conn|
+      puts "#{client_id} notifying #{channel}"
+      pg.notify channel, payload: client_id
+    }
+
+    pg.listen(channel, after_listen: notify_handler, loop: true) do |channel, pid, payload|
+      puts "#{client_id} received #{payload} via #{channel}"
+
+      if payload != client_id
+        puts "#{client_id} saw peer #{payload}, so stopping listen loop"
+        peer = payload
+        break
+      end
+    end
+
+    # TODO: how can we detect and not send the final extra notify from the second client?
+    notify_handler.call(nil)
+
+    msg_src.reply peer.split('_')[0]
+  end
+
+  def database_url
+    ENV["DATABASE_URL"] || "postgres://localhost/rendezvous-server"
+  end
+
+  def pg
+    @@pg ||= Sequel.connect(database_url)
+  end
+
+end
+
+Socket.udp_server_loop(SERVER_PORT) { |msg, msg_src|
+  Thread.new(msg, msg_src) do |msg, msg_src|
+    MessageHandler.new(msg, msg_src).call
+  end
+}
