@@ -1,4 +1,3 @@
-Bundler.require(:default, ENV['RACK_ENV'])
-require_relative './app'
+require_relative './lib/rendezvous_server'
 
 run RendezvousServer

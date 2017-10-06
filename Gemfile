@@ -10,6 +10,7 @@ gem 'sequel'
 gem 'rack-ssl'
 
 group :development, :test do
+  gem 'rspec'
   gem 'pry-byebug'
   gem 'pry-remote'
 end
