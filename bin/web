@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-exec bundle exec puma -p ${PORT:-5000} -e ${RACK_ENV:-development} -t 0:5 ../config.ru
+ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+exec bundle exec puma -p ${PORT:-5000} -e ${RACK_ENV:-development} -t 0:5 $ROOT_DIR/config.ru
