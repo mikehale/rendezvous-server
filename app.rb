@@ -2,10 +2,15 @@ require 'sinatra/base'
 require 'sinatra/reloader'
 require 'sequel'
 require 'uri'
+require 'rack/ssl'
 
 STDOUT.sync = true
 
 class RendezvousServer < Sinatra::Base
+  configure :production do
+    use Rack::SSL
+  end
+
   configure :development do
     register Sinatra::Reloader
   end

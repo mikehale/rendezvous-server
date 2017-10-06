@@ -27,5 +27,4 @@ curl "https://rendezvous-server.herokuapp.com?rendezvous-id=$id"
 
 ## TODO
 
-* force ssl
 * sessions

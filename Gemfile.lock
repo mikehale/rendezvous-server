@@ -9,6 +9,8 @@ GEM
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
+    rack-ssl (1.4.1)
+      rack
     sequel (5.1.0)
     sinatra (2.0.0)
       mustermann (~> 1.0)
@@ -30,6 +32,7 @@ PLATFORMS
 DEPENDENCIES
   pg
   puma
+  rack-ssl
   sequel
   sinatra
   sinatra-contrib
