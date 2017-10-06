@@ -15,6 +15,9 @@ GEM
     pry-byebug (3.4.2)
       byebug (~> 9.0)
       pry (~> 0.10)
+    pry-remote (0.1.8)
+      pry (~> 0.9)
+      slop (~> 3.0)
     puma (3.10.0)
     rack (2.0.3)
     rack-protection (2.0.0)
@@ -43,6 +46,7 @@ PLATFORMS
 DEPENDENCIES
   pg
   pry-byebug
+  pry-remote
   puma
   rack-ssl
   sequel
