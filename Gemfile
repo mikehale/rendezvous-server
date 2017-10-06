@@ -8,3 +8,7 @@ gem 'sinatra-contrib'
 gem 'pg'
 gem 'sequel'
 gem 'rack-ssl'
+
+group :development, :test do
+  gem 'pry-byebug'
+end
