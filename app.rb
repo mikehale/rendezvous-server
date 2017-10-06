@@ -54,6 +54,9 @@ class RendezvousServer < Sinatra::Base
     # TODO: how can we detect and not send the final extra notify from the second client?
     notify_handler.call(nil)
 
+    # Respond to http request with peer TCP endpoint. This allows the
+    # clients to know about each other, and attempt to establish a
+    # direct P2P connection.
     peer.split('_')[0]
   end
 end
